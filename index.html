@@ -111,7 +111,43 @@
 		</div>
 
 		<h3>Part 4: Edge flip</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>
+			I implemented the edge flip as a constant-time local operation on the two
+			triangles adjacent to an interior edge. I first saved references to all six
+			local half-edges, four vertices, five edges, and two faces before modifying
+			any connectivity. I then reassigned each affected half-edge's
+			<code>next</code>, <code>twin</code>, <code>vertex</code>,
+			<code>edge</code>, and <code>face</code> pointers so that the shared edge
+			connected the two previously opposite vertices. Finally, I updated the
+			representative half-edge pointers for the affected vertices, edges, and
+			faces. Boundary edges are returned unchanged, and the operation does not
+			create or delete any mesh elements.
+		</p>
+
+		<p>
+			To avoid difficult pointer bugs, I labeled the complete local configuration
+			before writing the assignments and reset every pointer in the two modified
+			triangles, including pointers whose targets did not change. I tested the
+			operation by flipping multiple edges on the teapot and checking that the
+			triangulation changed locally without creating holes or disconnecting the
+			mesh.
+		</p>
+
+		<div style="display: flex; gap: 20px; justify-content: center;">
+			<figure style="flex: 1; margin: 0;">
+				<img src="assets/part4-before-edge-flips.png"
+					 alt="Teapot mesh before edge flips"
+					 style="width: 100%;"/>
+				<figcaption>Teapot mesh before edge flips.</figcaption>
+			</figure>
+
+			<figure style="flex: 1; margin: 0;">
+				<img src="assets/part4-after-edge-flips.png"
+					 alt="Teapot mesh after several edge flips"
+					 style="width: 100%;"/>
+				<figcaption>Teapot mesh after several edge flips.</figcaption>
+			</figure>
+		</div>
 
 		<h3>Part 5: Edge split</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
