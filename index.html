@@ -150,7 +150,64 @@
 		</div>
 
 		<h3>Part 5: Edge split</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>
+			I implemented the edge split as a constant-time operation on the two
+			triangles adjacent to an interior edge. The operation inserts a new vertex
+			at the midpoint of the original edge and connects it to the two opposite
+			vertices, replacing the original two triangles with four. I reused the
+			original edge and two original faces, then allocated exactly one vertex,
+			three edges, two faces, and six half-edges. After creating the new elements,
+			I assigned every affected half-edge's <code>next</code>, <code>twin</code>,
+			<code>vertex</code>, <code>edge</code>, and <code>face</code> pointers and
+			updated the representative half-edge pointers for all local mesh elements.
+			The new vertex points along one half of the original split edge, which will
+			be important when the operation is used by Loop subdivision. Boundary edges
+			are left unchanged because boundary splitting is not required for the base
+			assignment.
+		</p>
+
+		<p>
+			The main challenge was keeping the expanded local connectivity consistent.
+			I labeled every element before allocating or rewiring anything, drew the four
+			resulting triangle cycles, and explicitly reset all pointers instead of only
+			changing the ones that appeared different. I tested the result with repeated
+			splits and with combinations of splits and flips. The mesh remained connected
+			and did not develop holes or detached faces.
+		</p>
+
+		<h4>Edge splits</h4>
+		<div style="display: flex; gap: 20px; justify-content: center;">
+			<figure style="flex: 1; margin: 0;">
+				<img src="assets/part5-before-operations.png"
+					 alt="Mesh before edge splits"
+					 style="width: 100%;"/>
+				<figcaption>Mesh before edge splits.</figcaption>
+			</figure>
+
+			<figure style="flex: 1; margin: 0;">
+				<img src="assets/part5-after-splits.png"
+					 alt="Mesh after several edge splits"
+					 style="width: 100%;"/>
+				<figcaption>Mesh after several edge splits.</figcaption>
+			</figure>
+		</div>
+
+		<h4>Combined edge splits and flips</h4>
+		<div style="display: flex; gap: 20px; justify-content: center;">
+			<figure style="flex: 1; margin: 0;">
+				<img src="assets/part5-before-operations.png"
+					 alt="Mesh before combined edge splits and flips"
+					 style="width: 100%;"/>
+				<figcaption>Mesh before the combined operations.</figcaption>
+			</figure>
+
+			<figure style="flex: 1; margin: 0;">
+				<img src="assets/part5-after-splits-and-flips.png"
+					 alt="Mesh after a combination of edge splits and flips"
+					 style="width: 100%;"/>
+				<figcaption>Mesh after a combination of edge splits and flips.</figcaption>
+			</figure>
+		</div>
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
