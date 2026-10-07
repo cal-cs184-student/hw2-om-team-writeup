@@ -23,6 +23,39 @@
 			body {
 				font-family: 'Inter', sans-serif;
 			}
+
+			.image-grid {
+				display: grid;
+				gap: 20px;
+				align-items: start;
+			}
+
+			.image-grid.two-column {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			.image-grid.three-column {
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+			}
+
+			.image-grid figure {
+				margin: 0;
+			}
+
+			.image-grid img {
+				width: 100%;
+			}
+
+			@media (max-width: 900px) {
+				.container {
+					padding: 30px 5%;
+				}
+
+				.image-grid.two-column,
+				.image-grid.three-column {
+					grid-template-columns: 1fr;
+				}
+			}
 		</style>
 	</head>
 	<body>
@@ -210,7 +243,123 @@
 		</div>
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>
+			I implemented Loop subdivision in five stages. First, I computed and stored
+			the updated position of every original vertex without changing the mesh. For
+			a vertex of degree \(n\), I used
+			\((1-nu)\mathbf{p}+u\sum_i\mathbf{p}_i\), where \(u=3/16\) when
+			\(n=3\) and \(u=3/(8n)\) otherwise. Next, I computed the position of
+			the new vertex on each original interior edge as
+			\(\frac{3}{8}(\mathbf{A}+\mathbf{B})+
+			\frac{1}{8}(\mathbf{C}+\mathbf{D})\), using the edge endpoints
+			\(A,B\) and the two opposite vertices \(C,D\).
+		</p>
+
+		<p>
+			I saved a list of the original edges before changing the topology, then split
+			each of those edges exactly once. I marked the inserted vertices as new and
+			tracked which edges were created by the subdivision. I flipped each new edge
+			that connected one old vertex and one new vertex, producing the Loop
+			connectivity pattern. Finally, after all topology changes were complete, I
+			copied the previously stored positions into the vertices. Computing all
+			positions before splitting was important because otherwise later calculations
+			could accidentally use already-updated geometry.
+		</p>
+
+		<h4>Subdivision behavior</h4>
+		<p>
+			Each subdivision step replaces every triangle with four smaller triangles.
+			Sharp corners and edges become progressively rounder, while the mesh approaches
+			a smooth limit surface. The icosahedron below becomes visually spherical after
+			only a few iterations. The increasingly dense and regular triangulation also
+			shows that repeated subdivision remains stable.
+		</p>
+
+		<div class="image-grid two-column">
+			<figure>
+				<img src="assets/part6-icosahedron-l0.png"
+					 alt="Original icosahedron before Loop subdivision"/>
+				<figcaption>Original icosahedron (0 subdivisions).</figcaption>
+			</figure>
+			<figure>
+				<img src="assets/part6-icosahedron-l1.png"
+					 alt="Icosahedron after one Loop subdivision"/>
+				<figcaption>After 1 subdivision.</figcaption>
+			</figure>
+			<figure>
+				<img src="assets/part6-icosahedron-l2.png"
+					 alt="Icosahedron after two Loop subdivisions"/>
+				<figcaption>After 2 subdivisions.</figcaption>
+			</figure>
+			<figure>
+				<img src="assets/part6-icosahedron-l3.png"
+					 alt="Icosahedron after three Loop subdivisions"/>
+				<figcaption>After 3 subdivisions.</figcaption>
+			</figure>
+		</div>
+
+		<figure>
+			<img src="assets/part6-icosahedron-many.png"
+				 alt="Icosahedron after many Loop subdivision steps"
+				 style="width: 70%; margin-top: 20px;"/>
+			<figcaption>After many subdivisions, the mesh converges to a smooth surface.</figcaption>
+		</figure>
+
+		<h4>Cube symmetry and preprocessing</h4>
+		<p>
+			Applying Loop subdivision directly to the cube produces an asymmetric result.
+			Although the geometry of the cube is symmetric, each square face is represented
+			by two triangles joined along only one diagonal. Those diagonals give different
+			vertices different local neighborhoods and valences. Since the Loop weights
+			depend on this local connectivity, the diagonal choices become visible as the
+			cube rounds and shrinks.
+		</p>
+
+		<p>
+			I reduced this effect by preprocessing the cube with edge splits so that each
+			face had a more balanced triangulation before subdivision. The additional
+			control vertices distribute the connectivity more evenly and constrain the
+			shape. As a result, the preprocessed cube retains a much more symmetric,
+			rounded-cube silhouette after the same number of subdivision steps.
+		</p>
+
+		<h5>Cube without preprocessing</h5>
+		<div class="image-grid three-column">
+			<figure>
+				<img src="assets/part6-cube-original-l0.png"
+					 alt="Original cube before Loop subdivision"/>
+				<figcaption>Original cube: 0 subdivisions.</figcaption>
+			</figure>
+			<figure>
+				<img src="assets/part6-cube-original-l1.png"
+					 alt="Original cube after one Loop subdivision"/>
+				<figcaption>Original cube: 1 subdivision.</figcaption>
+			</figure>
+			<figure>
+				<img src="assets/part6-cube-original-l3.png"
+					 alt="Original cube after three Loop subdivisions"/>
+				<figcaption>Original cube: 3 subdivisions.</figcaption>
+			</figure>
+		</div>
+
+		<h5>Cube after preprocessing with edge splits</h5>
+		<div class="image-grid three-column">
+			<figure>
+				<img src="assets/part6-cube-preprocessed-l0.png"
+					 alt="Preprocessed cube before Loop subdivision"/>
+				<figcaption>Preprocessed cube: 0 subdivisions.</figcaption>
+			</figure>
+			<figure>
+				<img src="assets/part6-cube-preprocessed-l1.png"
+					 alt="Preprocessed cube after one Loop subdivision"/>
+				<figcaption>Preprocessed cube: 1 subdivision.</figcaption>
+			</figure>
+			<figure>
+				<img src="assets/part6-cube-preprocessed-l3.png"
+					 alt="Preprocessed cube after three Loop subdivisions"/>
+				<figcaption>Preprocessed cube: 3 subdivisions.</figcaption>
+			</figure>
+		</div>
 
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
