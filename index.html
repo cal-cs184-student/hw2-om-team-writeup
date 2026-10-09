@@ -76,7 +76,7 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		In this homework, we implemented geometric modeling operations for Bézier curves, Bézier surfaces, and triangle meshes. We used de Casteljau's algorithm to evaluate curves through repeated interpolation, then extended the same process to surfaces using two parameters. For triangle meshes, we implemented area-weighted vertex normals, edge flips, edge splits, and Loop subdivision using the half-edge data structure. The assignment helped us understand how both control-point positions and mesh connectivity influence a model's appearance. Vertex normals improved the smoothness of the shading, while subdivision increased mesh resolution and rounded sharp features. The cube experiment showed that symmetric geometry can produce asymmetric subdivision results when its triangulation is unbalanced. We also learned the importance of maintaining consistent half-edge pointers and computing new vertex positions before modifying the mesh.
 
 		<h2>Section I: Bezier Curves and Surfaces</h2>
 
@@ -384,10 +384,6 @@
 				<figcaption>Preprocessed cube: 3 subdivisions.</figcaption>
 			</figure>
 		</div>
-
-		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
 		</div>
 	</body>
 </html>
