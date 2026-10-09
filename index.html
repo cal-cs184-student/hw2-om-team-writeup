@@ -61,7 +61,7 @@
 	<body>
 		<div class="container">
 		<h1>CS184/284A Fall 2026 Homework 2 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+		<div style="text-align: center;">Names: Elena Lepe and Oscar Oliva-Mendoza </div>
 
 		<br>
 
@@ -81,37 +81,61 @@
 		<h2>Section I: Bezier Curves and Surfaces</h2>
 
 		<h3>Part 1: Bezier curves with 1D de Casteljau subdivision</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		The de Casteljau algorithm evaluates Bezier curves by interpolating between neigboring control points using a parameter t. Each step reduces the number of points by one until only one point remains on the curve. In BezierCurve::evaluateStep, I implemented the interpolation formula (1 - t)pi + tpi+1 for each pair of neigboring points. The function returns the new points without changing the original ones. For my custom curve, I created bzc/section1_six_points.bzc with six control points: (0.10, 0.25), (0.22, 0.80), (0.40, 0.15), (0.58, 0.85), (0.78, 0.20) and (0.90, 0.65). I chose points with alternating heights to show how the control points affect the curves shape. Since there are six control points, the curve has degree five. I also tested the function to make sure each step returned the correct number of points and produced the expected results. 
 
 		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="assets/teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="assets/level0.png" width="400px"/>
+				  <figcaption>Six control points.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="assets/teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="assets/level1.png" width="400px"/>
+				  <figcaption>First interpolation level.</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="assets/teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="assets/level2.png" width="400px"/>
+				  <figcaption>Second interpolation level.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="assets/teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="assets/level3.png" width="400px"/>
+				  <figcaption>Third interpolation level.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="assets/level4.png" width="400px"/>
+				  <figcaption>Fourth interpolation level.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="assets/level5.png" width="400px"/>
+				  <figcaption>Final evaluation level.</figcaption>
 				</td>
 			  </tr>
 			</table>
 		</div>
 
 		<h3>Part 2: Bezier surfaces with separable 1D de Casteljau</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		Bezier surfaces work similarly to Bezier curves, but it uses 3D control points and two parameters, u and v. To evaluate a point on the surface, I first applied the de Casteljua algorithm to each row of control points using u. Then I used v to evaluate the resulting points and find the final position on the surface. I implemented three functions. BezierPatch::evaluateStep which interpolates between neigboring 3D points. BezierPatch::evaluate1D which repeats interpolation until one point remains. BezierPatch::evaluate which evaluates each row using u, then uses v to find the final point. I tested the functions using a simple 2x2 control grid. The results matched the expected values, including the point (0.5, 1, 0.25) when u = 0.25 and v= 0.5.
 
+		<div style="display: flex; gap: 20px; justify-content: center;">
+			<figure style="flex: 1; margin: 0;">
+				<img src="assets/teapot1.png"
+					 alt="Teapot"
+					 style="width: 100%;"/>
+			</figure>
+
+			<figure style="flex: 1; margin: 0;">
+				<img src="assets/teapot4.png"
+					 alt="Teapot"
+					 style="width: 100%;"/>
+			</figure>
+		</div>
+		
 		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
 		<h3>Part 3: Area-weighted vertex normals</h3>
